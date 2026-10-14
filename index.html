@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tactical Frosted 3-Column HUD</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main id="cockpit" class="theme-syahram engine-off" aria-label="Vehicle HUD">
+
+    <!-- MENU PENGATURAN HUD & DUAL-MODE MUSIC PLAYER -->
+    <div id="settingsMenu" class="no-drag">
+      <div class="settings-heading">
+        <span class="settings-dot"></span>
+        <span>HUD CONFIGURATION</span>
+        <button id="closeSettings" class="icon-button" type="button" aria-label="Tutup pengaturan">×</button>
+      </div>
+
+      <div class="menu-btns">
+        <button type="button" data-act="resize">Resize</button>
+        <button type="button" data-act="move">Pindah</button>
+        <button type="button" data-act="reset">Reset</button>
+        <button type="button" data-act="theme">Theme</button>
+      </div>
+
+      <!-- PANEL DUAL-MODE AUDIO PLAYER (RADIO FM & YOUTUBE) -->
+      <section id="music-panel" class="music-panel" aria-label="Dual Mode Audio Player">
+        <!-- Tab Switcher -->
+        <div class="audio-tabs" role="tablist">
+          <button id="tabBtnRadio" class="audio-tab active" type="button" data-tab="radio" role="tab" aria-selected="true">
+            📻 Radio FM
+          </button>
+          <button id="tabBtnYoutube" class="audio-tab" type="button" data-tab="youtube" role="tab" aria-selected="false">
+            ▶ YouTube
+          </button>
+        </div>
+
+        <!-- TAB 1: LIVE RADIO FM STREAMING -->
+        <div id="tabContentRadio" class="audio-tab-pane active" role="tabpanel">
+          <div class="radio-display">
+            <div class="radio-badge">LIVE FM</div>
+            <div class="radio-meta">
+              <div id="stationName" class="radio-station-name">Delta FM</div>
+              <div id="radioStatus" class="radio-status-text">Stopped</div>
+            </div>
+            <div class="radio-eq" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <div class="radio-select-wrap">
+            <select id="stationSelect" class="radio-select" aria-label="Pilih Stasiun Radio"></select>
+          </div>
+
+          <div class="music-main-controls">
+            <button id="btn-radio-prev" class="music-control-btn" type="button" title="Stasiun Sebelumnya">⏮</button>
+            <button id="btn-radio-play" class="music-play-btn" type="button" title="Play / Pause Radio">▶</button>
+            <button id="btn-radio-next" class="music-control-btn" type="button" title="Stasiun Berikutnya">⏭</button>
+          </div>
+
+          <div class="music-volume-row">
+            <button id="btn-radio-mute" class="music-icon-btn" type="button" title="Mute Radio">🔊</button>
+            <input id="radio-volume" class="music-range" type="range" min="0" max="100" value="80" step="1" aria-label="Radio Volume">
+            <span id="radio-volume-label" class="volume-pct">80%</span>
+          </div>
+        </div>
+
+        <!-- TAB 2: YOUTUBE LINK & PLAYLIST PLAYER -->
+        <div id="tabContentYoutube" class="audio-tab-pane" role="tabpanel">
+          <div class="music-now-playing">
+            <div class="music-video-wrap">
+              <div id="youtube-player"></div>
+              <img id="music-cover" class="music-cover" alt="" aria-hidden="true">
+              <div id="music-player-placeholder" class="music-placeholder">
+                <span class="music-placeholder-note" aria-label="Music">♪</span>
+              </div>
+            </div>
+            <div class="music-track-meta">
+              <div id="music-track-title">Belum ada lagu</div>
+              <div id="music-track-subtitle">Online playback</div>
+            </div>
+          </div>
+
+          <div class="music-progress-row">
+            <span id="music-current-time">0:00</span>
+            <input id="music-progress" class="music-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Song progress">
+            <span id="music-duration">0:00</span>
+          </div>
+
+          <div class="music-main-controls">
+            <button id="btn-music-prev" class="music-control-btn" type="button" title="Previous">⏮</button>
+            <button id="btn-music-play" class="music-play-btn" type="button" title="Play / Pause">▶</button>
+            <button id="btn-music-next" class="music-control-btn" type="button" title="Next">⏭</button>
+          </div>
+
+          <div class="music-volume-row">
+            <button id="btn-music-mute" class="music-icon-btn" type="button" title="Mute">🔊</button>
+            <input id="music-volume" class="music-range" type="range" min="0" max="100" value="80" step="1" aria-label="Volume">
+            <button id="btn-music-add-toggle" class="music-small-btn music-add-toggle" type="button" title="Tambah lagu">＋</button>
+          </div>
+
+          <div id="music-add-row" class="music-add-row hide">
+            <input id="music-url-input" type="text" placeholder="Link YouTube / ID Video" autocomplete="off">
+            <input id="music-title-input" type="text" placeholder="Nama lagu (opsional)" autocomplete="off">
+            <button id="btn-music-add" class="music-small-btn music-add-primary" type="button">▶</button>
+          </div>
+
+          <div class="music-tools-row">
+            <button id="btn-music-repeat" class="music-tool-btn" type="button" title="Ulangi lagu">↻</button>
+            <button id="btn-music-shuffle" class="music-tool-btn" type="button" title="Putar acak">⤨</button>
+          </div>
+
+          <div class="music-playlist-head">
+            <span>Playlist</span>
+            <button id="btn-music-clear" class="music-text-btn" type="button" title="Kosongkan playlist">×</button>
+          </div>
+          <div id="music-playlist" class="music-playlist" role="list">
+            <div class="music-empty">Playlist kosong. Tekan + untuk menambah lagu.</div>
+          </div>
+        </div>
+      </section>
+
+      <div id="settingsHint">Klik kanan pada HUD untuk membuka/menutup menu</div>
+    </div>
+
+    <!-- FLOATING MINI AUDIO CONTROLLER DI ATAS SPEEDOMETER -->
+    <div id="mini-music-pill" class="mini-music-pill no-drag" aria-label="Mini Audio Controller">
+      <div class="mini-pill-left">
+        <span id="miniSourceBadge" class="mini-source-badge">📻 RADIO</span>
+        <div id="miniEq" class="mini-eq" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="mini-track-wrap" title="Sedang Diputar">
+        <div id="miniTrackTitle" class="mini-track-title">Delta FM</div>
+      </div>
+
+      <div class="mini-pill-controls">
+        <button id="btn-mini-prev" class="mini-ctrl-btn" type="button" title="Sebelumnya">⏮</button>
+        <button id="btn-mini-play" class="mini-ctrl-btn mini-play-toggle" type="button" title="Play / Pause">▶</button>
+        <button id="btn-mini-next" class="mini-ctrl-btn" type="button" title="Berikutnya">⏭</button>
+        <button id="btn-mini-open" class="mini-ctrl-btn mini-panel-btn" type="button" title="Buka Panel Musik">🎵</button>
+        <button id="btn-mini-close" class="mini-ctrl-btn mini-close-btn" type="button" title="Sembunyikan Mini Player">×</button>
+      </div>
+    </div>
+
+    <!-- KARTU UTAMA HUD 3 KOLOM (CLEAN MATTE TACTICAL CARD) -->
+    <div class="hud-card">
+
+      <!-- KOLOM KIRI: SEIN KIRI, RPM LADDER VERTIKAL (19 STRIP), & GEAR -->
+      <section class="hud-col col-left" aria-label="RPM and Gear">
+        <div class="turn-slot">
+          <div id="leftIndicator" class="turn-arrow left" title="Left Indicator">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polygon points="18,4 5,12 18,20" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="rpm-block">
+          <span class="rpm-title">RPM</span>
+          <div id="rpmLadder" class="rpm-ladder" role="progressbar" aria-valuemin="0" aria-valuemax="8000" aria-valuenow="0">
+            <!-- 19 bar segmen vertikal dibangun otomatis via script.js -->
+          </div>
+        </div>
+
+        <div class="gear-block">
+          <div id="gearValue" class="gear-number">N</div>
+          <span class="gear-caption">GEAR</span>
+        </div>
+      </section>
+
+      <!-- GARIS PEMBATAS VERTIKAL 1 -->
+      <div class="col-divider" aria-hidden="true"></div>
+
+      <!-- KOLOM TENGAH: KECEPATAN UTAMA, 4 IKON STATUS (TERMASUK DOOR LOCK), & LOGO + ODOMETER -->
+      <section class="hud-col col-center" aria-label="Speed and Vehicle Status">
+        <div class="speed-display">
+          <div id="speedValue" class="speed-number">0</div>
+          <div id="speedUnit" class="speed-unit">km/h</div>
+        </div>
+
+        <div class="status-row">
+          <!-- 1. Ikon Lampu / Brightness -->
+          <div id="headlightIndicator" class="status-icon" title="Headlights: Off">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="5.2" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M12 6.8 A5.2 5.2 0 0 1 12 17.2 Z" fill="currentColor" />
+              <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="12" y1="2.2" x2="12" y2="4.3" />
+                <line x1="12" y1="19.7" x2="12" y2="21.8" />
+                <line x1="2.2" y1="12" x2="4.3" y2="12" />
+                <line x1="19.7" y1="12" x2="21.8" y2="12" />
+                <line x1="5.1" y1="5.1" x2="6.6" y2="6.6" />
+                <line x1="17.4" y1="17.4" x2="18.9" y2="18.9" />
+                <line x1="18.9" y1="5.1" x2="17.4" y2="6.6" />
+                <line x1="6.6" y1="17.4" x2="5.1" y2="18.9" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- 2. Ikon Sabuk Pengaman / Seatbelt -->
+          <div id="seatbeltIndicator" class="status-icon unbuckled" title="Seatbelt">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="4.8" r="2.6" fill="currentColor" />
+              <path d="M8.5 8.5 C7.2 8.5 6.4 9.5 6.4 10.8 L6.4 15.8 L9.2 15.8 L9.2 20.5 L14.8 20.5 L14.8 15.8 L17.6 15.8 L17.6 10.8 C17.6 9.5 16.8 8.5 15.5 8.5 Z" fill="currentColor" opacity="0.88" />
+              <line x1="6.2" y1="15.2" x2="17.5" y2="8.8" stroke="var(--card-bg-solid)" stroke-width="3.2" stroke-linecap="round" />
+              <line x1="6.2" y1="15.2" x2="17.5" y2="8.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <rect x="6" y="15.2" width="12" height="2" rx="1" fill="var(--card-bg-solid)" />
+            </svg>
+          </div>
+
+          <!-- 3. Ikon Mesin / Check Engine -->
+          <div id="engineCheck" class="status-icon" title="Engine Status">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 9 H10 L11.5 7 H16.5 L18 9 H20 V13 H22 V10 H23.2 V17 H22 V14.5 H20 V18 H16 L14.5 16.5 H9.5 L8 18 H5 V10 H7 Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round" />
+              <line x1="11.5" y1="4.5" x2="16.5" y2="4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="14" y1="4.5" x2="14" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="2.5" y1="11.5" x2="2.5" y2="16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="2.5" y1="14" x2="5" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+
+          <!-- 4. Ikon Kunci Pintu / Vehicle Door Lock -->
+          <div id="doorLockIcon" class="status-icon unlocked" title="Doors: Unlocked">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path id="lockShackle" d="M7 11V7a5 5 0 0 1 9.9-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <rect x="5" y="11" width="14" height="10" rx="2.4" fill="none" stroke="currentColor" stroke-width="2" />
+              <circle cx="12" cy="15.5" r="1.3" fill="currentColor" />
+              <line x1="12" y1="16.8" x2="12" y2="18.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- FOOTER TENGAH: LOGO LOKAL + ODOMETER -->
+        <div class="center-footer">
+          <img id="clusterLogo" src="logo.png" alt="Logo" class="cluster-logo" onerror="this.style.display='none'">
+          <div class="odo-pill" title="Odometer">
+            <span id="odometerValue">0.0</span>
+            <span id="odoUnit" class="odo-unit">KM</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- GARIS PEMBATAS VERTIKAL 2 -->
+      <div class="col-divider" aria-hidden="true"></div>
+
+      <!-- KOLOM KANAN: SEIN KANAN, BAR FUEL, & BAR HEALTH -->
+      <section class="hud-col col-right" aria-label="Fuel and Vehicle Health">
+        <div class="turn-slot right-slot">
+          <div id="rightIndicator" class="turn-arrow right" title="Right Indicator">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polygon points="6,4 19,12 6,20" />
+            </svg>
+          </div>
+        </div>
+
+        <div id="fuelBlock" class="metric-group">
+          <div class="metric-label">FUEL</div>
+          <div class="metric-bar-track">
+            <div id="fuelFill" class="metric-bar-fill"></div>
+          </div>
+          <div id="fuelValue" class="metric-percent">0%</div>
+        </div>
+
+        <div id="healthBlock" class="metric-group">
+          <div class="metric-label">HEALTH</div>
+          <div class="metric-bar-track">
+            <div id="healthFill" class="metric-bar-fill"></div>
+          </div>
+          <div id="healthValue" class="metric-percent">0%</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
