@@ -39,7 +39,7 @@
           </button>
         </div>
 
-        <!-- TAB 1: LIVE RADIO FM STREAMING -->
+        <!-- TAB 1: LIVE RADIO FM STREAMING & CUSTOM PLAYLIST -->
         <div id="tabContentRadio" class="audio-tab-pane active" role="tabpanel">
           <div class="radio-display">
             <div class="radio-badge">LIVE FM</div>
@@ -66,7 +66,22 @@
             <button id="btn-radio-mute" class="music-icon-btn" type="button" title="Mute Radio">🔊</button>
             <input id="radio-volume" class="music-range" type="range" min="0" max="100" value="80" step="1" aria-label="Radio Volume">
             <span id="radio-volume-label" class="volume-pct">80%</span>
+            <button id="btn-radio-add-toggle" class="music-small-btn music-add-toggle" type="button" title="Tambah saluran radio via link">＋</button>
           </div>
+
+          <!-- Form Tambah Saluran Radio Baru -->
+          <div id="radio-add-row" class="music-add-row hide">
+            <input id="radio-url-input" type="text" placeholder="Link Stream Radio (http/https)" autocomplete="off">
+            <input id="radio-title-input" type="text" placeholder="Nama Radio (opsional)" autocomplete="off">
+            <button id="btn-radio-add" class="music-small-btn music-add-primary" type="button" title="Simpan & Putar">▶</button>
+          </div>
+
+          <!-- Daftar Playlist Saluran Radio -->
+          <div class="music-playlist-head">
+            <span>Saluran Radio</span>
+            <button id="btn-radio-clear" class="music-text-btn" type="button" title="Hapus semua radio tambahan">↺</button>
+          </div>
+          <div id="radio-playlist" class="music-playlist" role="list"></div>
         </div>
 
         <!-- TAB 2: YOUTUBE LINK & PLAYLIST PLAYER -->
@@ -184,6 +199,9 @@
           <div id="speedValue" class="speed-number">0</div>
           <div id="speedUnit" class="speed-unit">km/h</div>
         </div>
+
+        <!-- NOTIFIKASI DI DALAM SPEEDOMETER (menggantikan alert mengambang) -->
+        <div id="hudNotice" class="hud-notice" role="status" aria-live="polite"></div>
 
         <div class="status-row">
           <!-- 1. Ikon Lampu / Brightness -->

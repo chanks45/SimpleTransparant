@@ -394,7 +394,7 @@ button, input, select {
 
 .rpm-ladder {
   display: flex;
-  flex-direction: column-reverse; /* Menyala berurutan dari bawah ke atas */
+  flex-direction: column-reverse;
   gap: 2.5px;
   width: 44px;
 }
@@ -453,6 +453,7 @@ button, input, select {
    KOLOM TENGAH: KECEPATAN UTAMA, 4 IKON STATUS, & FOOTER LOGO + ODOMETER
    ========================================================================== */
 .col-center {
+  position: relative;
   align-items: center;
   justify-content: space-between;
   padding: 18px 8px 0;
@@ -509,7 +510,7 @@ button, input, select {
   height: 100%;
 }
 
-/* 1. Status Ikon Lampu (Off = redup, Low Beam = putih/hijau, High Beam = biru terang) */
+/* 1. Status Ikon Lampu */
 #headlightIndicator.low-beam {
   color: var(--lowbeam-color);
   filter: drop-shadow(0 0 7px rgba(82, 247, 139, 0.75));
@@ -520,7 +521,7 @@ button, input, select {
   filter: drop-shadow(0 0 9px rgba(56, 182, 255, 0.9));
 }
 
-/* 2. Status Ikon Sabuk Pengaman (Belum pasang = merah berkedip, Terpasang = putih tenang) */
+/* 2. Status Ikon Sabuk Pengaman */
 #seatbeltIndicator.unbuckled {
   color: var(--danger-color);
   filter: drop-shadow(0 0 8px rgba(255, 59, 59, 0.8));
@@ -532,7 +533,7 @@ button, input, select {
   opacity: 0.92;
 }
 
-/* 3. Status Ikon Mesin (Mati = redup, Normal = putih/hijau, Rusak <50% = oranye/merah) */
+/* 3. Status Ikon Mesin */
 #engineCheck.engine-ok {
   color: var(--text-main);
   opacity: 0.95;
@@ -610,13 +611,10 @@ button, input, select {
 .col-right {
   align-items: center;
   justify-content: space-between;
-  padding-left: 10px; /* cermin dari padding-right kolom kiri */
+  padding-left: 10px;
   padding-bottom: 18px;
 }
 
-/* Lebar kolom kanan disamakan dengan kolom kiri (78px) dan bar FUEL/HEALTH
-   dibuat 44px seperti RPM ladder, sehingga kedua sisi seimbang terhadap
-   garis pembatas. */
 .metric-group {
   width: 100%;
   display: flex;
@@ -947,6 +945,46 @@ button, input, select {
   min-width: 30px;
   text-align: right;
   color: rgba(255, 255, 255, 0.75);
+}
+
+/* Badge & Item Playlist Radio */
+.radio-track-badge {
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
+  flex-shrink: 0;
+}
+
+.radio-track-badge.custom {
+  background: rgba(53, 242, 119, 0.18);
+  border: 1px solid rgba(53, 242, 119, 0.4);
+  color: #35f277;
+}
+
+.track-del-btn {
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 0;
+  background: rgba(255, 59, 59, 0.2);
+  color: #ff8080;
+  font-size: 11px;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.track-del-btn:hover {
+  background: rgba(255, 59, 59, 0.75);
+  color: #ffffff;
 }
 
 /* Tab 2: YouTube Player Styles */
@@ -1300,4 +1338,32 @@ button, input, select {
 @keyframes eqBounceMini {
   0% { height: 3px; }
   100% { height: 11px; }
+}
+
+/* Notifikasi di dalam speedometer (link radio/YouTube tidak valid) */
+.hud-notice {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  max-width: calc(100% - 12px);
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(20, 22, 28, 0.88);
+  border: 1px solid var(--warn-color);
+  color: var(--warn-color);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-align: center;
+  line-height: 1.25;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hud-notice.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
